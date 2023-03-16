@@ -161,6 +161,7 @@
             ( ${pkgs.lib.meta.getExe golden-gate-node} --chain=local --rpc-cors=all --alice --tmp &> alice.log ) &
             ( ${pkgs.lib.meta.getExe golden-gate-node} --chain=local --rpc-cors=all --bob --tmp &> bob.log ) &
             ( ${pkgs.lib.meta.getExe golden-gate-node} --chain=local --rpc-cors=all --charlie --tmp &> charlie.log ) &
+            echo https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9988#/explorer
           '';
         };
 
