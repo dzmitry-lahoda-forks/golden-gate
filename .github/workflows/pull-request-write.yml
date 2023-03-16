@@ -49,8 +49,13 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
       - run: |          
+          mkdir out
           nix build --print-build-logs --show-trace --no-update-lock-file
-     
+          cp ./result/lib/golden_gate_runtime.compact.compressed.wasm ./out
+          nix build .#golden-gate-node --print-build-logs --show-trace --no-update-lock-file
+          cp ./result/bin/golden_gate_node ./out
+          # export genesis here
+          
       - name: action-gh-release
         uses: softprops/action-gh-release@v1
         with:
@@ -61,4 +66,4 @@ jobs:
           tag_name: ${{ github.ref_name }}
           target_commitish: ${{ github.sha }}
           files: |
-            ./result/lib/golden_gate_runtime.compact.compressed.wasm
+            ./out/*
