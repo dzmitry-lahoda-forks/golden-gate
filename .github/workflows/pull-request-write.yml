@@ -16,12 +16,12 @@ env:
   CACHIX_NAME: golden-gate-ggx
 
 jobs:
-  build-runtime:
-    name: "build-runtime"
+  build-and-publish-draft:
+    name: "build-and-publish-draft"
     runs-on:
       - buildjet-32vcpu-ubuntu-2204
     concurrency:
-      group: build-runtime-${{ github.ref }}
+      group: build-and-publish-draft-${{ github.ref }}
       cancel-in-progress: true
     steps:
       - name: cachix-install-nix-action
@@ -53,8 +53,8 @@ jobs:
           nix build --print-build-logs --show-trace --no-update-lock-file
           cp ./result/lib/golden_gate_runtime.compact.compressed.wasm ./out
           nix build .#golden-gate-node --print-build-logs --show-trace --no-update-lock-file
-          cp ./result/bin/golden_gate_node ./out
-          # export genesis here
+          cp ./result/bin/golden_gate_node ./out  
+          # can add here contracts and oci image                  
           
       - name: action-gh-release
         uses: softprops/action-gh-release@v1

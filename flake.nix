@@ -76,7 +76,7 @@
 
 
         common-wasm-attrs = common-attrs // rec {
-          # really would could read it from Cargo.toml and reuse in here and in CI publish script, but would be too optimized
+          # really would could read it from Cargo.toml and reuse in here and in CI publish script as refactoring
           pname = "golden-gate-runtime";
           cargoExtraArgs = "--package ${pname} --target wasm32-unknown-unknown --no-default-features --features=aura,with-rocksdb-weights";
           RUSTFLAGS =
@@ -132,19 +132,19 @@
         golden-gate-node = craneLib.buildPackage (common-native-release-attrs // {
           src = rust-src;
           cargoArtifacts = common-native-release-deps;
+          nativeBuildInputs = common-native-release-attrs.nativeBuildInputs ++ [ pkgs.git ]; # parity does some git hacks in build.rs 
         });
 
 
-        # really need
-        # - light client emulator 
+        # really need to run as some points:
+        # - light client emulator (ideal for contracts)
         # - multi node local fast (fast druation low security)
         # - multi local slow (duration and security as in prod)
         # - here can apply above to remote with something if needed (terranix/terraform-ng works)
         # for each 
         # - either start from genesis
         # - of from fork (remote prod data)
-        # all with - archieval and loggin enabled
-
+        # all with - archieval and logging enabled
 
         single-fast = pkgs.writeShellApplication rec {
           name = "single-fast";
@@ -153,7 +153,7 @@
           '';
         };
 
-        # we do not use existing tools as they target relay + parachains
+        # we do not use existing Dotsama tools as they target relay + parachains
         # here we can evolve into generating arion/systemd/podman/k8s output (what ever will fit) easy 
         multi-fast = pkgs.writeShellApplication rec {
           name = "multi-fast";
